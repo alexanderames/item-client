@@ -11,10 +11,21 @@ const GET_ITEMS = gql`
   }
 `;
 
+const CREATE_ITEM = gql`
+  mutation createItem($input: CreateItemInput!) {
+    createItem(input: $input) {
+      item {
+        id
+        name
+      }
+    }
+  }
+`;
+
 function App() {
   const [userInput, setUserInput] = useState("");
   const { loading, error, data } = useQuery(GET_ITEMS);
-  // const [updateItems, updateItemsStatus] = useMutation(GET_ITEMS);
+  const [updateItems, updateItemsStatus] = useMutation(CREATE_ITEM);
   // TODO: update to debounce
   const onUserInput = ({ target }) => {
     console.log(target.value);
@@ -23,6 +34,9 @@ function App() {
 
   const fireUserInput = () => {
     console.log(userInput);
+    updateItems({
+      variables: { input: { name: userInput, userId: 1 } },
+    });
   };
 
   if (loading) return <p>Loading...</p>;
@@ -36,8 +50,8 @@ function App() {
             <input
               type="text"
               className="form-control"
-              placeholder="Recipient's username"
-              aria-label="Recipient's username"
+              placeholder="create item"
+              aria-label="create item"
               aria-describedby="button-addon2"
               onChange={onUserInput}
             />
