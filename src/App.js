@@ -25,7 +25,12 @@ const CREATE_ITEM = gql`
 function App() {
   const [userInput, setUserInput] = useState("");
   const { loading, error, data } = useQuery(GET_ITEMS);
-  const [updateItems, updateItemsStatus] = useMutation(CREATE_ITEM);
+  const [updateItems, updateItemsStatus] = useMutation(CREATE_ITEM, {
+    refetchQueries: [
+      GET_ITEMS,
+      'GetItems'
+    ],
+  });
   // TODO: update to debounce
   const onUserInput = ({ target }) => {
     console.log(target.value);
