@@ -6,4 +6,5 @@ This is the Client repo for the Items app. It should be run in conjunction with 
 
 To get the app up and running, pull down this repo and run the following commands in your terminal:
 
+- `npm i`
 - `yarn start`

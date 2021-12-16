@@ -43,23 +43,20 @@ function App() {
     { label: "Side", value: "SIDE" }
   ];
 
-  const [collectedItemType, setItemTypes] = useState('');
+  const [collectedItemType, setItemTypes] = useState('TACO');
   const [updateItems, updateItemsStatus] = useMutation(CREATE_ITEM, {
     refetchQueries: [GET_ITEMS, "GetItems"],
   });
 
   const handleTypeChange = (e) => {
-    console.log('setItemTypes', e.target.value);
     setItemTypes(e.target.value);
   }
 
   const onUserInput = ({ target }) => {
-    console.log(target.value);
     setUserInput(target.value);
   };
 
   const fireUserInput = () => {
-    console.log(userInput);
     console.log(collectedItemType);
     updateItems({
       variables: {
