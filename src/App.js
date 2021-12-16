@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState } from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
+import debounce from 'debounce';
 
 const GET_ITEMS = gql`
   query items {
@@ -25,7 +26,7 @@ const CREATE_ITEM = gql`
 `;
 
 function App() {
-  const [userInput, setUserInput] = useState("");
+  const [userInput, setUserInput] = useState('TACO');
   const { loading, error, data } = useQuery(GET_ITEMS);
 
   const emojiMap = {
@@ -51,10 +52,11 @@ function App() {
   const handleTypeChange = (e) => {
     setItemTypes(e.target.value);
   }
-
-  const onUserInput = ({ target }) => {
+  
+  const onUserInput = debounce(({ target }) => {
+    console.log(target.value);
     setUserInput(target.value);
-  };
+  }, 250);
 
   const fireUserInput = () => {
     console.log(collectedItemType);
