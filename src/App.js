@@ -28,6 +28,12 @@ function App() {
   const [userInput, setUserInput] = useState("");
   const { loading, error, data } = useQuery(GET_ITEMS);
 
+  const emojiMap = {
+    'DRINK': '🍺',
+    'TACO': '🌮',
+    'SIDE': '🍕'
+  }
+
   const itemTypes = [
     {
       label: "Taco",
@@ -99,7 +105,7 @@ function App() {
           <ul className="list-group list-group-flush">
             {data.items.map(({ id, name, itemType }) => (
               <li className="list-group-item" key={id}>
-                {name} | {itemType}
+                {name} {emojiMap[itemType]}
               </li>
             ))}
           </ul>
