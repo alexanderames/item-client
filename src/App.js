@@ -8,6 +8,7 @@ const GET_ITEMS = gql`
     items {
       id
       name
+      itemType
     }
   }
 `;
@@ -18,6 +19,7 @@ const CREATE_ITEM = gql`
       item {
         id
         name
+        itemType
       }
     }
   }
@@ -26,13 +28,32 @@ const CREATE_ITEM = gql`
 function App() {
   const [userInput, setUserInput] = useState("");
   const { loading, error, data } = useQuery(GET_ITEMS);
+
+  const emojiMap = {
+    'DRINK': '🍺',
+    'TACO': '🌮',
+    'SIDE': '🍕'
+  }
+
+  const itemTypes = [
+    {
+      label: "Taco",
+      value: "TACO"
+    },
+    { label: "Drink", value: "DRINK" },
+    { label: "Side", value: "SIDE" }
+  ];
+
+  const [collectedItemType, setItemTypes] = useState('');
   const [updateItems, updateItemsStatus] = useMutation(CREATE_ITEM, {
-    refetchQueries: [
-      GET_ITEMS,
-      'GetItems'
-    ],
+    refetchQueries: [GET_ITEMS, "GetItems"],
   });
 
+  const handleTypeChange = (e) => {
+    console.log('setItemTypes', e.target.value);
+    setItemTypes(e.target.value);
+  }
+  
   const onUserInput = debounce(({ target }) => {
     console.log(target.value);
     setUserInput(target.value);
@@ -40,8 +61,11 @@ function App() {
 
   const fireUserInput = () => {
     console.log(userInput);
+    console.log(collectedItemType);
     updateItems({
-      variables: { input: { name: userInput, userId: 1 } },
+      variables: {
+        input: { name: userInput, itemType: collectedItemType, userId: 1 },
+      },
     });
   };
 
@@ -56,11 +80,18 @@ function App() {
             <input
               type="text"
               className="form-control"
-              placeholder="create item"
-              aria-label="create item"
+              placeholder="item name"
+              aria-label="item name"
               aria-describedby="button-addon2"
               onChange={onUserInput}
             />
+            <select onChange={handleTypeChange}>
+              {itemTypes.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
             <button
               className="btn btn-outline-secondary"
               type="button"
@@ -73,9 +104,9 @@ function App() {
         </div>
         <div className="col-6">
           <ul className="list-group list-group-flush">
-            {data.items.map(({ id, name }) => (
+            {data.items.map(({ id, name, itemType }) => (
               <li className="list-group-item" key={id}>
-                {name}
+                {name} {emojiMap[itemType]}
               </li>
             ))}
           </ul>
